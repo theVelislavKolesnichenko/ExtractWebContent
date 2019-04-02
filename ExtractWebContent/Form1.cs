@@ -93,7 +93,7 @@ namespace ExtractWebContent
             }
         }
 
-        private static void Example(string pageingUrl)
+        private static void Example(string pageingUrl, string domain)
         {
             for (int i = 1; i <= 1334; i++)
             {
@@ -110,7 +110,7 @@ namespace ExtractWebContent
                     MessageBox.Show("Node Name: " + node.Name + "\n" + node.Attributes["href"].Value);
 
 
-                    var bookHtml = $"https://m.helikon.bg{node.Attributes["href"].Value}";
+                    var bookHtml = $"{domain}{node.Attributes["href"].Value}";
 
                     var bookHtmlDoc = web.Load(bookHtml);
 
