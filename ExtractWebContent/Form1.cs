@@ -21,6 +21,21 @@ namespace ExtractWebContent
 
         private void button1_Click(object sender, EventArgs e)
         {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                string exeptionMessage = "Unidentified Error";
+                do
+                {
+                    exeptionMessage = ex.Message;
+                    ex = ex.InnerException;
+                }
+                while (ex.InnerException != null);
+                MessageBox.Show(exeptionMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             string url = textBox1.Text;
             var appSettings = ConfigurationManager.AppSettings;
             string siteName = string.Empty, domain = string.Empty;
