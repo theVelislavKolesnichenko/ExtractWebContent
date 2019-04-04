@@ -23,7 +23,41 @@ namespace ExtractWebContent
         {
             try
             {
+                string url = textBox1.Text;
+                var appSettings = ConfigurationManager.AppSettings;
+                string siteName = string.Empty, domain = string.Empty;
+                bool hasError = false;
+                if (appSettings.Count == 0)
+                {
+                    MessageBox.Show("AppSettings is empty.");
+                    hasError = true;
+                }
+                else
+                {
+                    siteName = appSettings["siteName"];
+                    if (string.IsNullOrEmpty(siteName))
+                    {
+                        MessageBox.Show("Missing AppSetting siteName.");
+                        hasError = true;
+                    }
+                    domain = appSettings["domain"];
+                    if (string.IsNullOrEmpty(domain))
+                    {
+                        MessageBox.Show("Missing AppSetting domain.");
+                        hasError = true;
+                    }
+                }
 
+                if (string.IsNullOrEmpty(url) || !url.Contains(siteName))
+                {
+                    MessageBox.Show("Wrong site name");
+                    hasError = true;
+                }
+
+                if (!hasError)
+                {
+                    ExtractProducts(url, domain);
+                }
             }
             catch (Exception ex)
             {
@@ -35,41 +69,6 @@ namespace ExtractWebContent
                 }
                 while (ex.InnerException != null);
                 MessageBox.Show(exeptionMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            string url = textBox1.Text;
-            var appSettings = ConfigurationManager.AppSettings;
-            string siteName = string.Empty, domain = string.Empty;
-            bool hasError = false;
-            if (appSettings.Count == 0)
-            {
-                MessageBox.Show("AppSettings is empty.");
-                hasError = true;
-            }
-            else
-            {
-                siteName = appSettings["siteName"];
-                if (string.IsNullOrEmpty(siteName))
-                {
-                    MessageBox.Show("Missing AppSetting siteName.");
-                    hasError = true;
-                }
-                domain = appSettings["domain"];
-                if (string.IsNullOrEmpty(domain))
-                {
-                    MessageBox.Show("Missing AppSetting domain.");
-                    hasError = true;
-                }
-            }
-
-            if (string.IsNullOrEmpty(url) || !url.Contains(siteName))
-            {
-                MessageBox.Show("Wrong site name");
-                hasError = true;
-            }
-
-            if(!hasError)
-            {
-                ExtractProducts(url, domain);
             }
         }
 
