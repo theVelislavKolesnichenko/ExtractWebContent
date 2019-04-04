@@ -50,7 +50,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(255, 22);
             this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "https://www.emag.bg/ardes/122/v";
             // 
             // label1
             // 

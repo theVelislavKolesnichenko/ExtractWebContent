@@ -78,19 +78,26 @@ namespace ExtractWebContent
 
                     var categoryHtmlDoc = web.Load($"{domain}{categoryUrl}");
 
-                    //SaveProducts(categoryHtmlDoc)
+
+                    SaveProducts(categoryHtmlDoc);
 
                     categoryPages = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@aria-label='Next']");
-                    if (categoryPages != null)
+                    var nexButton = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@href='javascript:void(0)']");
+                    if (categoryPages != null && (nexButton == null || !nexButton.Any(e => e.InnerText == "Напред")))
                     {
-                        categoryUrl = categoryPages[0].Attributes["href"].Value;
+                        categoryUrl = categoryPages.Last().Attributes["href"].Value;
                     }
                     else
                     {
-                        categoryHtmlDoc = null;
+                        categoryUrl = null;
                     }
                 } while (categoryUrl != null);
             }
+        }
+
+        private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
+        {
+            MessageBox.Show("Save in file!");
         }
 
         private static void Example(string pageingUrl, string domain)
