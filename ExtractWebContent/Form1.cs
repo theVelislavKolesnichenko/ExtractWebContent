@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using ExtractWebContent.Models;
 
 namespace ExtractWebContent
 {
@@ -115,17 +116,43 @@ namespace ExtractWebContent
         private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
         {
             HtmlNodeCollection categoryItems = categoryHtmlDoc.DocumentNode.SelectNodes("//div[@class='card-heading']/a");
-            var categoryItemsLinks = categoryItems.Select(ci => ci.Attributes.Where(an => an.Name == "href").Select(av => av.Value));
+            var categoryItemsLinks = categoryItems.SelectMany(ci => ci.Attributes.Where(an => an.Name == "href").Select(av => av.Value));
+            var csvItems = new List<CsvItem>();
+
             foreach (var link in categoryItemsLinks)
             {
-                var itemPage = Web.Load(link.First());
-                var imageLinks = itemPage.DocumentNode.SelectNodes("//a[@class ='thumbnail product-gallery-image gtm_rp125918']").Select(e => e.Attributes.Where(a => a.Name == "href").Select(v => v.Value));
-                var description = itemPage.DocumentNode.SelectNodes("//div[@id ='description-body']").Select(i => i.InnerText.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty));
-                //var regTest = Regex.Replace(string.Join("", description), @"([\t]+)", "");
+                //todo: add check
+                csvItems.Add(GetCsvItem(link));
             }
 
 
             MessageBox.Show("Save in file!");
+        }
+
+        private static CsvItem GetCsvItem(string link)
+        {
+            var page = Web.Load(link);
+
+            var title = page.DocumentNode.SelectNodes("//h1[@class ='page-title']").Select(e => e.InnerText).FirstOrDefault();
+            var imageLinks = page.DocumentNode.SelectNodes("//a[@class ='thumbnail product-gallery-image gtm_rp125918']").SelectMany(e => e.Attributes.Where(a => a.Name == "href").Select(v => v.Value));
+            //var description = page.DocumentNode.SelectNodes("//div[@id ='description-body']").Select(i => i.InnerText.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty));
+            //var regTest = Regex.Replace(string.Join("", description), @"([\t]+)", "");
+
+            IEnumerable<string> description = new List<string>();
+            var descriptionNode = page.DocumentNode.SelectNodes("//div[@id ='description-body']");
+            if (descriptionNode != null)
+            {
+                description = descriptionNode.Select(i => i.InnerText.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty));
+            }
+
+            CsvItem csvItem = new CsvItem
+            {
+                Title = title,
+                Description = string.Join("", description),
+                ImageLinks = imageLinks
+            };
+
+            return csvItem;
         }
 
         private static void Example(string pageingUrl, string domain)
