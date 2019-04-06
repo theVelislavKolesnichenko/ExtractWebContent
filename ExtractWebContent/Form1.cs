@@ -118,6 +118,8 @@ namespace ExtractWebContent
             foreach (var link in categoryItemsLinks)
             {
                 var itemPage = Web.Load(link.First());
+                var imageLinks = itemPage.DocumentNode.SelectNodes("//a[@class ='thumbnail product-gallery-image gtm_rp125918']").Select(e => e.Attributes.Where(a => a.Name == "href").Select(v => v.Value));
+
                 //
             }
 
@@ -185,9 +187,7 @@ namespace ExtractWebContent
 
                     //<div class="tab-pane fade in active"
                     var description = bookHtmlDoc.DocumentNode.SelectSingleNode("/html/body/div[1]/div[6]/div[2]/div[1]/div/div[1]/p"); 
-                    MessageBox.Show("Node Name: " + description.Name + "\n" + description.InnerText);    
-                    
-                    //didididididi
+                    MessageBox.Show("Node Name: " + description.Name + "\n" + description.InnerText);  
                 }
             }
         }
