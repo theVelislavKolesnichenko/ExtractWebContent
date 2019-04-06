@@ -14,8 +14,8 @@ namespace ExtractWebContent
 {
     public partial class Form1 : Form
     {
-        //private static HtmlWeb Web = new HtmlWeb();
-        //private string domain = "https://www.emag.bg/ardes/122/v";
+        private static HtmlWeb Web = new HtmlWeb();
+
         public Form1()
         {
             InitializeComponent();
@@ -76,9 +76,9 @@ namespace ExtractWebContent
 
         public static void ExtractProducts(string url, string domain)
         {
-            HtmlWeb web = new HtmlWeb();
+           // HtmlWeb web = new HtmlWeb();
 
-            var htmlDoc = web.Load(url);
+            var htmlDoc = Web.Load(url);
 
             var categories = htmlDoc.DocumentNode.SelectNodes("//div[@class='category-item']/a");
             //js-change-page hidden-xs hidden-sm
@@ -92,10 +92,10 @@ namespace ExtractWebContent
                 HtmlNodeCollection categoryPages = null;
                 do {
 
-                    var categoryHtmlDoc = web.Load($"{domain}{categoryUrl}");
+                    var categoryHtmlDoc = Web.Load($"{domain}{categoryUrl}");
 
 
-                    SaveProducts(categoryHtmlDoc, domain, web);
+                    SaveProducts(categoryHtmlDoc);
 
                     categoryPages = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@aria-label='Next']");
                     var nexButton = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@href='javascript:void(0)']");
@@ -111,13 +111,13 @@ namespace ExtractWebContent
             }
         }
 
-        private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc, string domain, HtmlWeb web)
+        private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
         {
             HtmlNodeCollection categoryItems = categoryHtmlDoc.DocumentNode.SelectNodes("//div[@class='card-heading']/a");
             var categoryItemsLinks = categoryItems.Select(ci => ci.Attributes.Where(an => an.Name == "href").Select(av => av.Value));
             foreach (var link in categoryItemsLinks)
             {
-                var itemPage = web.Load(link.First());
+                var itemPage = Web.Load(link.First());
             }
 
 
