@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ExtractWebContent
@@ -112,6 +114,20 @@ namespace ExtractWebContent
         private static void SaveProducts(List<CsvItem> items)
         {
             MessageBox.Show("Save in file!");
+            string strFilePath = @"testfile.csv";
+            string strSeperator = ",";
+            StringBuilder sbOutput = new StringBuilder();
+
+            foreach (var item in items)
+            {
+                sbOutput.AppendLine(item.ToString());
+            }
+
+            // Create and write the csv file
+            File.WriteAllText(strFilePath, sbOutput.ToString());
+
+            // To append more lines to the csv file
+            //File.AppendAllText(strFilePath, sbOutput.ToString());
         }
 
         private static List<CsvItem> GetCsvItems(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
