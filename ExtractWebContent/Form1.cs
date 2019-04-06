@@ -1,16 +1,11 @@
-﻿using HtmlAgilityPack;
+﻿using ExtractWebContent.Models;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Configuration;
-using System.Text.RegularExpressions;
-using ExtractWebContent.Models;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace ExtractWebContent
 {
@@ -78,7 +73,7 @@ namespace ExtractWebContent
 
         public static void ExtractProducts(string url, string domain)
         {
-           // HtmlWeb web = new HtmlWeb();
+            // HtmlWeb web = new HtmlWeb();
 
             var htmlDoc = Web.Load(url);
 
@@ -92,12 +87,13 @@ namespace ExtractWebContent
                 var categoryUrl = category.Attributes["href"].Value;
 
                 HtmlNodeCollection categoryPages = null;
-                do {
+                do
+                {
 
                     var categoryHtmlDoc = Web.Load($"{domain}{categoryUrl}");
+                    var csvItems = GetCsvItems(categoryHtmlDoc);
 
-
-                    SaveProducts(categoryHtmlDoc);
+                    SaveProducts(csvItems);
 
                     categoryPages = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@aria-label='Next']");
                     var nexButton = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@href='javascript:void(0)']");
@@ -113,7 +109,12 @@ namespace ExtractWebContent
             }
         }
 
-        private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
+        private static void SaveProducts(List<CsvItem> items)
+        {
+            MessageBox.Show("Save in file!");
+        }
+
+        private static List<CsvItem> GetCsvItems(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
         {
             HtmlNodeCollection categoryItems = categoryHtmlDoc.DocumentNode.SelectNodes("//div[@class='card-heading']/a");
             var categoryItemsLinks = categoryItems.SelectMany(ci => ci.Attributes.Where(an => an.Name == "href").Select(av => av.Value));
@@ -125,8 +126,7 @@ namespace ExtractWebContent
                 csvItems.Add(GetCsvItem(link));
             }
 
-
-            MessageBox.Show("Save in file!");
+            return csvItems;
         }
 
         private static CsvItem GetCsvItem(string link)
@@ -214,8 +214,8 @@ namespace ExtractWebContent
                     MessageBox.Show("Node Name: " + price.Name + "\n" + price.InnerText);
 
                     //<div class="tab-pane fade in active"
-                    var description = bookHtmlDoc.DocumentNode.SelectSingleNode("/html/body/div[1]/div[6]/div[2]/div[1]/div/div[1]/p"); 
-                    MessageBox.Show("Node Name: " + description.Name + "\n" + description.InnerText);  
+                    var description = bookHtmlDoc.DocumentNode.SelectSingleNode("/html/body/div[1]/div[6]/div[2]/div[1]/div/div[1]/p");
+                    MessageBox.Show("Node Name: " + description.Name + "\n" + description.InnerText);
                 }
             }
         }
