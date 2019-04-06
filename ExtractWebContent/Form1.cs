@@ -118,6 +118,7 @@ namespace ExtractWebContent
             foreach (var link in categoryItemsLinks)
             {
                 var itemPage = Web.Load(link.First());
+                //
             }
 
 
