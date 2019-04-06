@@ -133,7 +133,7 @@ namespace ExtractWebContent
         {
             var page = Web.Load(link);
 
-            var title = page.DocumentNode.SelectNodes("//h1[@class ='page-title']").Select(e => e.InnerText).FirstOrDefault();
+            var title = page.DocumentNode.SelectNodes("//h1[@class ='page-title']").Select(e => e.InnerText.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty)).FirstOrDefault();
             var imageLinks = page.DocumentNode.SelectNodes("//a[@class ='thumbnail product-gallery-image gtm_rp125918']").SelectMany(e => e.Attributes.Where(a => a.Name == "href").Select(v => v.Value));
             //var description = page.DocumentNode.SelectNodes("//div[@id ='description-body']").Select(i => i.InnerText.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty));
             //var regTest = Regex.Replace(string.Join("", description), @"([\t]+)", "");
