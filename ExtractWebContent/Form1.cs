@@ -14,6 +14,8 @@ namespace ExtractWebContent
 {
     public partial class Form1 : Form
     {
+        //private static HtmlWeb Web = new HtmlWeb();
+        //private string domain = "https://www.emag.bg/ardes/122/v";
         public Form1()
         {
             InitializeComponent();
@@ -83,7 +85,7 @@ namespace ExtractWebContent
 
             foreach (var category in categories)
             {
-                MessageBox.Show("Node Name: " + category.Name + "\n" + category.InnerText + "\n" + category.Attributes["href"].Value );
+                MessageBox.Show("Node Name: " + category.Name + "\n" + category.InnerText + "\n" + category.Attributes["href"].Value);
 
                 var categoryUrl = category.Attributes["href"].Value;
 
@@ -93,7 +95,7 @@ namespace ExtractWebContent
                     var categoryHtmlDoc = web.Load($"{domain}{categoryUrl}");
 
 
-                    SaveProducts(categoryHtmlDoc);
+                    SaveProducts(categoryHtmlDoc, domain, web);
 
                     categoryPages = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@aria-label='Next']");
                     var nexButton = categoryHtmlDoc.DocumentNode.SelectNodes("//a[@href='javascript:void(0)']");
@@ -109,8 +111,16 @@ namespace ExtractWebContent
             }
         }
 
-        private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc)
+        private static void SaveProducts(HtmlAgilityPack.HtmlDocument categoryHtmlDoc, string domain, HtmlWeb web)
         {
+            HtmlNodeCollection categoryItems = categoryHtmlDoc.DocumentNode.SelectNodes("//div[@class='card-heading']/a");
+            var categoryItemsLinks = categoryItems.Select(ci => ci.Attributes.Where(an => an.Name == "href").Select(av => av.Value));
+            foreach (var link in categoryItemsLinks)
+            {
+                var itemPage = web.Load(link.First());
+            }
+
+
             MessageBox.Show("Save in file!");
         }
 
@@ -173,7 +183,7 @@ namespace ExtractWebContent
                     MessageBox.Show("Node Name: " + price.Name + "\n" + price.InnerText);
 
                     //<div class="tab-pane fade in active"
-                    var description = bookHtmlDoc.DocumentNode.SelectSingleNode("/html/body/div[1]/div[6]/div[2]/div[1]/div/div[1]/p");
+                    var description = bookHtmlDoc.DocumentNode.SelectSingleNode("/html/body/div[1]/div[6]/div[2]/div[1]/div/div[1]/p"); 
                     MessageBox.Show("Node Name: " + description.Name + "\n" + description.InnerText);    
                     
                     //didididididi
