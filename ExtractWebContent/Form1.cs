@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace ExtractWebContent
 {
@@ -119,8 +120,8 @@ namespace ExtractWebContent
             {
                 var itemPage = Web.Load(link.First());
                 var imageLinks = itemPage.DocumentNode.SelectNodes("//a[@class ='thumbnail product-gallery-image gtm_rp125918']").Select(e => e.Attributes.Where(a => a.Name == "href").Select(v => v.Value));
-
-                //
+                var description = itemPage.DocumentNode.SelectNodes("//div[@id ='description-body']").Select(i => i.InnerText.Trim().Replace("\n", string.Empty).Replace("\t", string.Empty));
+                //var regTest = Regex.Replace(string.Join("", description), @"([\t]+)", "");
             }
 
 
