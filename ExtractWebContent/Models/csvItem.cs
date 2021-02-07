@@ -2,7 +2,7 @@
 
 namespace ExtractWebContent.Models
 {
-    public class CsvItem
+    public class CsvItem : ICsvItem
     {
         public string Title { get; set; }
         public string Description { get; set; }

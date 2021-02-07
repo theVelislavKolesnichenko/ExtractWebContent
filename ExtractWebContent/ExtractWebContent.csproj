@@ -50,13 +50,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\GetStudentsFromTUVarna.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\BaseCsvItem.cs" />
     <Compile Include="Models\CsvItem.cs" />
+    <Compile Include="Models\ModelConstants.cs" />
+    <Compile Include="Models\Query.cs" />
+    <Compile Include="Models\StudentAccaumt.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
